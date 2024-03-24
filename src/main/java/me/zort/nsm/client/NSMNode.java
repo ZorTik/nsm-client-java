@@ -16,8 +16,6 @@ public final class NSMNode extends NSMAbstractClient {
         return handleRequest(repository.status());
     }
 
-    // TODO
-
     @Override
     public NSMNodeRepository getRepository(String serviceId) {
         return repository;
