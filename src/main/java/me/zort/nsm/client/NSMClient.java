@@ -25,8 +25,6 @@ public final class NSMClient extends NSMAbstractClient {
         return handleRequest(getRepository(null).serviceList(request.toBuilder().all(true).build()));
     }
 
-    // TODO
-
     public NSMNode getNode(String id) {
         return nodes.get(id);
     }

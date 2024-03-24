@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import me.zort.nsm.client.repository.NSMNodeRepository;
 import me.zort.nsm.client.response.NodeStatusResponse;
 import me.zort.sqllib.SQLDatabaseConnection;
+import me.zort.sqllib.api.data.Row;
 import me.zort.sqllib.pool.SQLConnectionPool;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 
 public final class NSMCluster {
@@ -82,7 +84,31 @@ public final class NSMCluster {
     public NSMNodeRepository repoBalanced() {
         requireBaseAmounts();
         if (repos.size() > 1) {
-            // TODO
+            Map<String, Integer> sessionCounts = new HashMap<>();
+            try (SQLDatabaseConnection conn = sql.getResource()) {
+                for (Row row : conn.query("SELECT nodeId, COUNT(serviceId) AS serviceCount FROM Session GROUP BY nodeId;")) {
+                    sessionCounts.put(row.getString("nodeId"), row.getInt("serviceCount"));
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            String node = null;
+            int min = Integer.MAX_VALUE;
+            for (String nId : sessionCounts.keySet()) {
+                if (sessionCounts.get(nId) < min && repos.containsKey(nId)) {
+                    node = nId;
+                    min = sessionCounts.get(nId);
+                }
+            }
+            if (node == null) {
+                // Random node from repos
+                if (repos.isEmpty()) {
+                    throw new RuntimeException("No nodes are available!");
+                }
+                int randIndex = ThreadLocalRandom.current().nextInt(repos.size());
+                repos.get(repos.keySet().toArray(new String[0])[randIndex]);
+            }
+            return repos.get(node);
         } else {
             return getOnly();
         }

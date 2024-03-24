@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.zort.nsm.client.exception.NSMResponseException;
 import me.zort.nsm.client.repository.NSMNodeRepository;
+import me.zort.nsm.client.request.ChServiceOptionsRequest;
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
 import me.zort.nsm.client.response.*;
@@ -47,6 +48,10 @@ public abstract class NSMAbstractClient {
 
     public final PowerStatusResponse powerStatus(String serviceId) throws NSMResponseException {
         return handleRequest(getRepository(serviceId).powerStatus(serviceId));
+    }
+
+    public final BasicActionResponse changeOptions(String serviceId, ChServiceOptionsRequest request) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).changeOptions(serviceId, request));
     }
 
     protected <T> T handleRequest(Call<T> call) throws NSMResponseException {

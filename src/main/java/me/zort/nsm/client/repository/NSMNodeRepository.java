@@ -1,5 +1,6 @@
 package me.zort.nsm.client.repository;
 
+import me.zort.nsm.client.request.ChServiceOptionsRequest;
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
 import me.zort.nsm.client.response.*;
@@ -37,5 +38,8 @@ public interface NSMNodeRepository {
 
     @GET("/v1/service/{serviceId}/powerstatus")
     Call<PowerStatusResponse> powerStatus(@Path("serviceId") String serviceId);
+
+    @POST("/v1/service/{serviceId}/options")
+    Call<BasicActionResponse> changeOptions(@Path("serviceId") String serviceId, @Body ChServiceOptionsRequest request);
 
 }
