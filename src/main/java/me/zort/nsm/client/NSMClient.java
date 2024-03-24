@@ -1,13 +1,14 @@
 package me.zort.nsm.client;
 
 import me.zort.nsm.client.exception.NSMResponseException;
+import me.zort.nsm.client.repository.NSMNodeRepository;
 import me.zort.nsm.client.request.ServiceListRequest;
 import me.zort.nsm.client.response.ServiceListResponse;
 import me.zort.sqllib.SQLConnectionBuilder;
 import me.zort.sqllib.pool.SQLConnectionPool;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 
 public final class NSMClient extends NSMAbstractClient {
 
@@ -26,8 +27,8 @@ public final class NSMClient extends NSMAbstractClient {
 
     // TODO
 
-    public NSMNode getNode(String name) {
-        return nodes.get(name);
+    public NSMNode getNode(String id) {
+        return nodes.get(id);
     }
 
     @Override
@@ -45,18 +46,24 @@ public final class NSMClient extends NSMAbstractClient {
 
     public static final class Builder {
 
-        private final Map<String, String> baseUrls = new HashMap<>();
+        private final Set<String> baseUrls = new HashSet<>();
 
         private SQLConnectionBuilder sqlBuilder = null;
         private SQLConnectionPool.Options sqlPoolOpt = new SQLConnectionPool.Options();
+        private Logger logger = Logger.getGlobal();
 
-        public Builder registerNode(String name, String baseUrl) {
-            baseUrls.put(name, baseUrl);
+        public Builder node(String baseUrl) {
+            baseUrls.clear();
+            baseUrls.add(baseUrl);
             return this;
         }
 
-        public Builder db(SQLConnectionBuilder builder) {
-            this.sqlBuilder = builder;
+        // Provide db where NSM stores its data about services and nodes to
+        // be able to balance requests.
+        public Builder nodes(Collection<String> baseUrls, SQLConnectionBuilder db) {
+            this.baseUrls.clear();
+            this.baseUrls.addAll(baseUrls);
+            this.sqlBuilder = db;
             return this;
         }
 
@@ -65,18 +72,22 @@ public final class NSMClient extends NSMAbstractClient {
             return this;
         }
 
+        public Builder logger(Logger logger) {
+            this.logger = logger;
+            return this;
+        }
+
         public NSMClient build() {
             if (baseUrls.isEmpty()) {
                 throw new RuntimeException("At least one base url must be provided!");
             }
-
             SQLConnectionPool pool = null;
             if (sqlBuilder != null) {
                 pool = sqlBuilder.createPool(sqlPoolOpt);
             }
-            NSMCluster cluster = new NSMCluster(pool);
-            for (String name : baseUrls.keySet()) {
-                cluster.addNode(name, baseUrls.get(name));
+            NSMCluster cluster = new NSMCluster(pool, logger);
+            for (String baseUrl : baseUrls) {
+                cluster.addNode(baseUrl);
             }
             return new NSMClient(cluster);
         }

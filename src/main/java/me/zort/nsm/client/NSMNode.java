@@ -1,6 +1,7 @@
 package me.zort.nsm.client;
 
 import me.zort.nsm.client.exception.NSMResponseException;
+import me.zort.nsm.client.repository.NSMNodeRepository;
 import me.zort.nsm.client.request.ServiceListRequest;
 import me.zort.nsm.client.response.NodeStatusResponse;
 import me.zort.nsm.client.response.ServiceListResponse;

@@ -3,6 +3,7 @@ package me.zort.nsm.client;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.zort.nsm.client.exception.NSMResponseException;
+import me.zort.nsm.client.repository.NSMNodeRepository;
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
 import me.zort.nsm.client.response.CreateServiceResponse;

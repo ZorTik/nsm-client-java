@@ -1,4 +1,4 @@
-package me.zort.nsm.client;
+package me.zort.nsm.client.repository;
 
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
