@@ -7,11 +7,19 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+    maven {
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+    }
 }
 
 dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.10.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.10.0'
+    implementation 'com.github.ZorTik:AdvancedSQLClient:0.7-pre5'
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
