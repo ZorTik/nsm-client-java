@@ -2,10 +2,7 @@ package me.zort.nsm.client.repository;
 
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
-import me.zort.nsm.client.response.CreateServiceResponse;
-import me.zort.nsm.client.response.InspectServiceResponse;
-import me.zort.nsm.client.response.NodeStatusResponse;
-import me.zort.nsm.client.response.ServiceListResponse;
+import me.zort.nsm.client.response.*;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -18,12 +15,27 @@ public interface NSMNodeRepository {
     Call<NodeStatusResponse> status();
 
     @POST("/v1/servicelist")
-    Call<ServiceListResponse> serviceList(ServiceListRequest request);
+    Call<ServiceListResponse> serviceList(@Body ServiceListRequest request);
 
     @POST("/v1/service/create")
     Call<CreateServiceResponse> createService(@Body CreateServiceRequest request);
 
     @GET("/v1/service/{serviceId}")
     Call<InspectServiceResponse> inspectService(@Path("serviceId") String serviceId);
+
+    @POST("/v1/service/{serviceId}/resume")
+    Call<BasicActionResponse> resumeService(@Path("serviceId") String serviceId);
+
+    @POST("/v1/service/{serviceId}/stop")
+    Call<BasicActionResponse> stopService(@Path("serviceId") String serviceId);
+
+    @POST("/v1/service/{serviceId}/delete")
+    Call<BasicActionResponse> deleteService(@Path("serviceId") String serviceId);
+
+    @POST("/v1/service/{serviceId}/reboot")
+    Call<BasicActionResponse> rebootService(@Path("serviceId") String serviceId);
+
+    @GET("/v1/service/{serviceId}/powerstatus")
+    Call<PowerStatusResponse> powerStatus(@Path("serviceId") String serviceId);
 
 }

@@ -6,9 +6,7 @@ import me.zort.nsm.client.exception.NSMResponseException;
 import me.zort.nsm.client.repository.NSMNodeRepository;
 import me.zort.nsm.client.request.CreateServiceRequest;
 import me.zort.nsm.client.request.ServiceListRequest;
-import me.zort.nsm.client.response.CreateServiceResponse;
-import me.zort.nsm.client.response.InspectServiceResponse;
-import me.zort.nsm.client.response.ServiceListResponse;
+import me.zort.nsm.client.response.*;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -18,7 +16,10 @@ import java.io.IOException;
 public abstract class NSMAbstractClient {
 
     public abstract NSMNodeRepository getRepository(String serviceId);
-    public abstract ServiceListResponse serviceList(ServiceListRequest request) throws NSMResponseException;
+
+    public ServiceListResponse serviceList(ServiceListRequest request) throws NSMResponseException {
+        return handleRequest(getRepository(null).serviceList(request));
+    }
 
     public final CreateServiceResponse createService(CreateServiceRequest request) throws NSMResponseException {
         return handleRequest(getRepository(null).createService(request));
@@ -26,6 +27,26 @@ public abstract class NSMAbstractClient {
 
     public final InspectServiceResponse inspectService(String serviceId) throws NSMResponseException {
         return handleRequest(getRepository(serviceId).inspectService(serviceId));
+    }
+
+    public final BasicActionResponse resumeService(String serviceId) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).resumeService(serviceId));
+    }
+
+    public final BasicActionResponse stopService(String serviceId) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).stopService(serviceId));
+    }
+
+    public final BasicActionResponse deleteService(String serviceId) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).deleteService(serviceId));
+    }
+
+    public final BasicActionResponse rebootService(String serviceId) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).rebootService(serviceId));
+    }
+
+    public final PowerStatusResponse powerStatus(String serviceId) throws NSMResponseException {
+        return handleRequest(getRepository(serviceId).powerStatus(serviceId));
     }
 
     protected <T> T handleRequest(Call<T> call) throws NSMResponseException {

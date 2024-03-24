@@ -1,7 +1,10 @@
 package me.zort.nsm.client.response;
 
+import lombok.Data;
+
 import java.util.Map;
 
+@Data
 public final class InspectServiceResponse {
 
     private String id;
@@ -10,6 +13,7 @@ public final class InspectServiceResponse {
     private Map<String, String> env;
     private Session session;
 
+    @Data
     public static final class Session {
         private String serviceId;
         private String nodeId;
