@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'me.zort'
@@ -27,4 +28,27 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId = 'com.github.ZorTik'
+            artifactId = project.name
+            version = '1.0'
+
+            from components.java
+            pom {
+                name = 'nsm-java-client'
+                description = 'Java wrapper for node-server-manager.'
+                developers {
+                    developer {
+                        id = 'zort'
+                        name = 'ZorTik'
+                        email = 'zortlegit@gmail.com'
+                    }
+                }
+            }
+        }
+    }
 }
