@@ -34,12 +34,12 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             groupId = 'com.github.ZorTik'
-            artifactId = project.name
+            artifactId = 'nsm-client-java'
             version = '1.0'
 
             from components.java
             pom {
-                name = 'nsm-java-client'
+                name = 'nsm-client-java'
                 description = 'Java wrapper for node-server-manager.'
                 developers {
                     developer {
